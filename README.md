@@ -30,3 +30,28 @@ Install additional extension for `vue-storefront-api`:
 ```shell
 $ cp -f ./API/braintree ../vue-storefront-api/src/api/extensions/
 ```
+
+## Braintree payment Checkout Review
+Under your theme components/core/blocks/Checkout/OrderReview.vue add the following import to your script
+```
+import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin'
+
+export default {
+  components: {
+    BaseCheckbox,
+    ButtonFull,
+    CartSummary,
+    Modal,
+    ValidationError,
+    BraintreeDropin
+  }
+}  
+
+```
+And within the template after cart-summary add the following
+
+```
+<div class="payment">
+                <braintree-dropin v-if="payment.paymentMethod === 'braintree'"/>
+              </div>
+````              
