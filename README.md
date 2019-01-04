@@ -33,7 +33,7 @@ $ cp -f ./API/braintree ../vue-storefront-api/src/api/extensions/
 
 ## Braintree payment Checkout Review
 Under your theme components/core/blocks/Checkout/OrderReview.vue add the following import to your script
-```
+```js
 import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin'
 
 export default {
@@ -50,8 +50,8 @@ export default {
 ```
 And within the template after cart-summary add the following
 
-```
+```htmnl
 <div class="payment">
-                <braintree-dropin v-if="payment.paymentMethod === 'braintree'"/>
-              </div>
+   <braintree-dropin v-if="payment.paymentMethod === 'braintree'"/>
+</div>
 ````              
