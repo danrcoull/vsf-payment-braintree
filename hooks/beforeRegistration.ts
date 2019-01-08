@@ -1,8 +1,9 @@
 export function beforeRegistration(Vue, config, store, isServer) {
+    const CURRENT_METHOD_CODE = 'braintree'
 
     store.dispatch('payment/addMethod', {
         'title': 'Braintree',
-        'code': 'braintree',
+        'code': CURRENT_METHOD_CODE,
         'cost': 0,
         'costInclTax': 0,
         'default': true,
@@ -11,18 +12,16 @@ export function beforeRegistration(Vue, config, store, isServer) {
 
     if (!Vue.prototype.$isServer) {
 
+        let isCurrentPaymentMethod = false
         store.watch((state) => state.checkout.paymentDetails, (prevMethodCode, newMethodCode) => {
-            if (newMethodCode === 'braintree') {
-                // Register the handler for what happens when they click the place order button.
-                Vue.prototype.$bus.$on('checkout-before-placeOrder', () => {
-                    Vue.prototype.$bus.$emit('checkout-do-placeOrder', {})
-                })
-            } else {
-                // Unregister the extensions placeorder handler
-                Vue.prototype.$bus.$off('checkout-before-placeOrder', () => {
-                    Vue.prototype.$bus.$emit('checkout-do-placeOrder', {})
-                })
-            }
+            isCurrentPaymentMethod = newMethodCode === CURRENT_METHOD_CODE
         })
+
+        const invokePlaceOrder = () => {
+            if (isCurrentPaymentMethod) {
+                Vue.prototype.$bus.$emit('checkout-do-placeOrder', {})
+            }
+        }
+        Vue.prototype.$bus.$on('checkout-before-placeOrder', invokePlaceOrder)
     }
 }
