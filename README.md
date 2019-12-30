@@ -80,3 +80,6 @@ And within the template after cart-summary add the following
    <braintree-dropin v-if="payment.paymentMethod === 'braintree'"/>
 </div>
 ````              
+
+
+[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/lato-black.png)](https://www.buymeacoffee.com/BHaNOMl)
