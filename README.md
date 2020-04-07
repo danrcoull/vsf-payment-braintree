@@ -43,7 +43,7 @@ Install additional extension for `vue-storefront-api`:
 ```shell
 $ cp -f ./API/braintree ../vue-storefront-api/src/api/extensions/
 ```
-Add the config to your api confgig
+Add the config to your api confg
 
 ```json
 "extensions":{
@@ -56,8 +56,20 @@ Add the config to your api confgig
 }
 ```
 
-## Braintree payment Checkout Review
-Under your theme components/core/blocks/Checkout/OrderReview.vue add the following import to your script
+And enable Braintree extension in the config, by adding it to `registeredExtensions` array
+
+```json
+"registeredExtensions": [
+    "braintree"
+]
+```
+
+
+## Add Braintree Drop-in UI to your theme
+#### If you use Classic VS theme:
+
+Under your theme `components/core/blocks/Checkout/OrderReview.vue` add the following import to your script
+
 ```js
 import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin'
 
@@ -70,8 +82,7 @@ export default {
     ValidationError,
     BraintreeDropin
   }
-}  
-
+}
 ```
 And within the template after cart-summary add the following
 
@@ -79,7 +90,27 @@ And within the template after cart-summary add the following
 <div class="payment">
    <braintree-dropin v-if="payment.paymentMethod === 'braintree'"/>
 </div>
-````              
+````
 
+#### If you use Capybara VS theme:
+Under your theme `components/organisms/o-confirm-order.vue` add the following import to your script
+
+```js
+import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin'
+
+export default {
+  components: {
+    BraintreeDropin
+  }
+}
+```
+
+And add the following code before "Place the order" button
+
+```htmnl
+<div class="payment">
+   <braintree-dropin v-if="paymentMethod === 'Braintree'"/>
+</div>
+````
 
 [![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/lato-black.png)](https://www.buymeacoffee.com/BHaNOMl)
