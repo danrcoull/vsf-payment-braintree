@@ -1,10 +1,9 @@
 <template>
-  <div class="braintree" id="braintree"/>
+  <div class="braintree" id="braintree" />
 </template>
 
 <script>
-import store from '@vue-storefront/store'
-import {currentStoreView} from '@vue-storefront/store/lib/multistore'
+import { currentStoreView } from '@vue-storefront/core/lib/multistore'
 
 export default {
   name: 'BraintreeDropin',
@@ -23,14 +22,14 @@ export default {
   },
   computed: {
     grandTotal () {
-      let cartTotals = store.getters['cart/totals']
+      let cartTotals = this.$store.getters['cart/getTotals']
       return cartTotals.find(seg => seg.code === 'grand_total').value
     }
   },
   methods: {
     configureBraintree () {
       var self = this
-      store.dispatch('braintree/generateToken').then((resp) => {
+      this.$store.dispatch('braintree/generateToken').then((resp) => {
         var dropin = require('braintree-web-drop-in')
         console.debug('Code for braintree:' + resp)
         var button = document.querySelector('.place-order-btn')
@@ -43,7 +42,7 @@ export default {
             currency: this.getTransactions().amount.currency
           }
         }).then((dropinInstance) => {
-          button.addEventListener('click', function () {
+          button.addEventListener('click', () => {
             if (dropinInstance.isPaymentMethodRequestable()) {
               setTimeout(() => {
                 dropinInstance.requestPaymentMethod((err, payload) => {
@@ -80,7 +79,7 @@ export default {
       return {nonce: this.nonce, total: this.grandTotal, currency: this.currency}
     },
     doPayment (data, actions) {
-      return store.dispatch('braintree/doPayment', this.getNonce())
+      return this.$store.dispatch('braintree/doPayment', this.getNonce())
     },
     onAuthorize (data, actions) {
       return true

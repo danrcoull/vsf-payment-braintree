@@ -1,14 +1,34 @@
-import { VueStorefrontModule, VueStorefrontModuleConfig } from '@vue-storefront/core/lib/module'
-import { beforeRegistration } from './hooks/beforeRegistration'
+import { StorefrontModule } from '@vue-storefront/core/lib/modules';
 import { module } from './store'
-import { plugin } from './store/plugin'
+import { coreHooks } from '@vue-storefront/core/hooks';
 
-const KEY = 'braintree'
+export const Braintree: StorefrontModule = function ({app, store, router, moduleConfig, appConfig}) {
+  store.registerModule('braintree', module);
 
-const moduleConfig: VueStorefrontModuleConfig = {
-  key: KEY,
-  store: { modules: [{ key: KEY, module: module }], plugin },
-  beforeRegistration
+  coreHooks.afterAppInit(() => {
+    const CURRENT_METHOD_CODE = 'braintree'
+
+    store.dispatch('checkout/addPaymentMethod', {
+      'title': 'Braintree',
+      'code': CURRENT_METHOD_CODE,
+      'cost': 0,
+      'costInclTax': 0,
+      'default': true,
+      'offline': false
+    })
+
+    if (!app.$isServer) {
+      let isCurrentPaymentMethod = false
+      store.watch((state) => state.checkout.paymentDetails, (prevMethodCode, newMethodCode) => {
+        isCurrentPaymentMethod = newMethodCode.paymentMethod === CURRENT_METHOD_CODE
+      })
+
+      const invokePlaceOrder = () => {
+        if (isCurrentPaymentMethod) {
+          app.$emit('checkout-do-placeOrder', {})
+        }
+      }
+      app.$on('checkout-before-placeOrder', invokePlaceOrder)
+    }
+  })
 }
-
-export const Braintree = new VueStorefrontModule(moduleConfig)
