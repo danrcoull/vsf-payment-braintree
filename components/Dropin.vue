@@ -73,10 +73,10 @@ export default {
       })
     },
     getTransactions () {
-      return {amount: {total: this.grandTotal, currency: this.currency}}
+      return { amount: { total: this.grandTotal, currency: this.currency } }
     },
     getNonce () {
-      return {nonce: this.nonce, total: this.grandTotal, currency: this.currency}
+      return { nonce: this.nonce, total: this.grandTotal, currency: this.currency }
     },
     doPayment (data, actions) {
       return this.$store.dispatch('braintree/doPayment', this.getNonce())
