@@ -37,8 +37,6 @@ export function registerClientModules () {
 }
 ```
 
-
-
 Add the endpoint to your config
 ```json
   "braintree" : {
