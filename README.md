@@ -11,17 +11,30 @@ By hand (preferer):
 $ git clone git@github.com:danrcoull/vsf-payment-braintree.git ./vue-storefront/src/modules/payment-braintree
 ```
 
-Registration the Braintree module. Go to `./src/modules/index.ts`
+Registration the Braintree module. Go to `./src/modules/client.ts`
 ```js
 ...
-import { GoogleAnalytics } from './google-analytics';
+import { InitialResourcesModule } from '@vue-storefront/core/modules/initial-resources'
 import { Braintree } from './payment-braintree';
 
-export const registerModules: VueStorefrontModule[] = [
+export function registerNewModules () {
   ...
-  GoogleAnalytics,
-  Braintree
+  registerModule(InstantCheckoutModule) 
+  registerModule(Braintree) 
 ]
+```
+
+OR If you use Capybara VS theme. Go to `./src/themes/capybara/config/modules.ts`
+```js
+...
+import { PaymentCashOnDeliveryModule } from 'src/modules/payment-cash-on-delivery'
+import { Braintree } from 'src/modules/payment-braintree'
+...
+export function registerClientModules () {
+  ...
+  registerModule(NewsletterModule)
+  registerModule(Braintree)
+}
 ```
 
 Add the endpoint to your config
