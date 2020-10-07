@@ -2,7 +2,7 @@ import { StorefrontModule } from '@vue-storefront/core/lib/modules';
 import { module } from './store'
 import { coreHooks } from '@vue-storefront/core/hooks';
 
-export const Braintree: StorefrontModule = function ({app, store, router, moduleConfig, appConfig}) {
+export const Braintree: StorefrontModule = function ({ app, store }) {
   store.registerModule('braintree', module);
 
   coreHooks.afterAppInit(() => {

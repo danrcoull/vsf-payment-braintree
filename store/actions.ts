@@ -6,7 +6,7 @@ import { adjustMultistoreApiUrl } from '@vue-storefront/core/lib/multistore'
 
 // it's a good practice for all actions to return Promises with effect of their execution
 export const actions: ActionTree<BraintreeState, any> = {
-  generateToken ({}) {
+  generateToken () {
     let url = config.braintree.endpoint + '/get-token'
     console.log(url)
     return fetch(url, {
@@ -22,7 +22,7 @@ export const actions: ActionTree<BraintreeState, any> = {
         return resp.result.token
       })
   },
-  doPayment ({}, params) {
+  doPayment (params) {
     let url = config.braintree.endpoint + '/do-payment'
     console.log(url)
     console.log(params)
@@ -41,7 +41,7 @@ export const actions: ActionTree<BraintreeState, any> = {
       })
   },
   // if you are using cache in your module it's a good practice to allow developers to choose either to use it or not
-  execute ({}, params) {
+  execute (params) {
     let url = config.paypal.endpoint.execute
     url = config.storeViews.multistore ? adjustMultistoreApiUrl(url) : url
     return fetch(url, {
