@@ -9,19 +9,23 @@ module.exports = ({ config, db }) => {
   let env = config.extensions.braintree.mode === 'sandbox' ? braintree.Environment.Sandbox : braintree.Environment.Production
 
   api.get('/get-token', (req, res) => {
-    var gateway = braintree.connect({
+    var gateway = new braintree.BraintreeGateway({
       environment: env,
       merchantId: config.extensions.braintree.merchantId,
       publicKey: config.extensions.braintree.publicKey,
       privateKey: config.extensions.braintree.privateKey
     });
 
-    gateway.clientToken.generate({}, (err, response) => {
+    gateway.clientToken.generate({})
+    .then(response => {
       var clientToken = response.clientToken
       apiStatus(res, {
         token: clientToken,
         status: 'success'
       }, 200);
+    }).catch(err => {
+      apiStatus(res,err, 500);
+      console.error(err)
     });
   });
 
@@ -29,7 +33,7 @@ module.exports = ({ config, db }) => {
     var reqB = req.body;
     console.log(reqB)
     console.log(reqB.nonce)
-    var gateway = braintree.connect({
+    var gateway = new braintree.BraintreeGateway({
       environment: env,
       merchantId: config.extensions.braintree.merchantId,
       publicKey: config.extensions.braintree.publicKey,
@@ -42,8 +46,9 @@ module.exports = ({ config, db }) => {
       options: {
         submitForSettlement: true
       }
-    }, (err, response) => {
-      console.error(response)
+    })
+    .then(response => {
+      console.debug(response)
       if (typeof (response.success) !== 'undefined') {
         if (response.success) {
           apiStatus(res, {
@@ -61,8 +66,11 @@ module.exports = ({ config, db }) => {
           error: response.ErrorResponse.params.message
         }, 500);
       }
+    }).catch(err => {
+      console.error(err);
+      apiStatus(res, err, 500);
     });
-  })
+  });
 
   return api
 }
